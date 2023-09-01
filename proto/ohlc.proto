@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package ohlc;
+
+option go_package = "github.com/zakariawahyu/go-ohlc/pb";
+
+service OhlcService {
+  rpc Order(OrderRequest) returns (OrderResponse) {}
+  rpc Summary(SummaryRequest) returns (SummaryResponse) {}
+}
+
+message OrderRequest {
+  string StockCode = 1;
+  string OrderNumber = 2;
+  string Type = 3;
+  string Quantity = 4;
+  string Price = 5;
+}
+
+message OrderResponse {
+  int64 Status = 1;
+  string Error = 2;
+  string Message = 3;
+}
+
+message SummaryRequest {
+  string StockCode = 1;
+}
+
+message SummaryResponse {
+  string StockCode = 1;
+  int64 PreviousPrice = 2;
+  int64 OpenPrice = 3;
+  int64 HighestPrice = 4;
+  int64 LowestPrice = 5;
+  int64 ClosePrice = 6;
+  int64 AveragePrice = 7;
+  int64 Volume = 8;
+  int64 Value = 9;
+}
