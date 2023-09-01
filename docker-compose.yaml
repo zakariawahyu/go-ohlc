@@ -1,0 +1,171 @@
+version: '3'
+services:
+  zookeeper1:
+    container_name: zookeeper-1
+    image: 'bitnami/zookeeper:3.8'
+    ports:
+      - '12181:12181'
+    volumes:
+      - 'zookeper_data1:/zookeeper'
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+      - ZOO_PORT_NUMBER=12181
+      - ZOO_SERVER_ID=1
+      - ZOO_SERVERS=0.0.0.0:2888:3888,zookeeper2:2888:3888,zookeeper3:2888:3888
+    networks:
+      - kafka_network
+  
+  zookeeper2:
+    container_name: zookeeper-2
+    image: 'bitnami/zookeeper:3.8'
+    ports:
+      - '22181:22181'
+    volumes:
+      - 'zookeper_data2:/zookeeper'
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+      - ZOO_PORT_NUMBER=22181
+      - ZOO_SERVER_ID=2
+      - ZOO_SERVERS=zookeeper1:2888:3888,0.0.0.0:2888:3888,zookeeper3:2888:3888
+    networks:
+      - kafka_network
+  
+  zookeeper3:
+    container_name: zookeeper-3
+    image: 'bitnami/zookeeper:3.8'
+    ports:
+      - '32181:32181'
+    volumes:
+      - 'zookeper_data3:/zookeeper'
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+      - ZOO_PORT_NUMBER=32181
+      - ZOO_SERVER_ID=3
+      - ZOO_SERVERS=zookeeper1:2888:3888,zookeeper2:2888:3888,0.0.0.0:2888:3888
+    networks:
+      - kafka_network
+
+  kafka1:
+    image: 'bitnami/kafka:3.5'
+    container_name: kafka-1
+    ports:
+      - '19093:19093'
+    environment:
+      - KAFKA_CFG_BROKER_ID=101
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper-1:12181,zookeeper-2:22181,zookeeper-3:32181
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://0.0.0.0:9092,EXTERNAL://0.0.0.0:19093
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://:9092,EXTERNAL://localhost:19093
+      - KAFKA_INTER_BROKER_LISTENER_NAME=PLAINTEXT
+      - KAFKA_CFG_NUM_PARTITIONS=3
+      - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=false
+      - KAFKA_CFG_DEFAULT_REPLICATION_FACTOR=3
+      - KAFKA_CFG_OFFSETS_TOPIC_REPLICATION_FACTOR=3
+      - KAFKA_CFG_TRANSACTION_STATE_LOG_REPLICATION_FACTOR=3
+      - KAFKA_HEAP_OPTS=-Xmx1024m -Xms1024m
+    volumes:
+      - 'kafka1_data:/bitnami'
+    depends_on:
+      - zookeeper1
+      - zookeeper2
+      - zookeeper3
+    networks:
+      - kafka_network
+  
+  kafka2:
+    image: 'bitnami/kafka:3.5'
+    container_name: kafka-2
+    ports:
+      - '29093:29093'
+    environment:
+      - KAFKA_CFG_BROKER_ID=102
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper-1:12181,zookeeper-2:22181,zookeeper-3:32181
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://0.0.0.0:9092,EXTERNAL://0.0.0.0:29093
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://:9092,EXTERNAL://localhost:29093
+      - KAFKA_INTER_BROKER_LISTENER_NAME=PLAINTEXT
+      - KAFKA_CFG_NUM_PARTITIONS=3
+      - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=false
+      - KAFKA_CFG_DEFAULT_REPLICATION_FACTOR=3
+      - KAFKA_CFG_OFFSETS_TOPIC_REPLICATION_FACTOR=3
+      - KAFKA_CFG_TRANSACTION_STATE_LOG_REPLICATION_FACTOR=3
+      - KAFKA_HEAP_OPTS=-Xmx1024m -Xms1024m
+    volumes:
+      - 'kafka2_data:/bitnami'
+    depends_on:
+      - zookeeper1
+      - zookeeper2
+      - zookeeper3
+    networks:
+      - kafka_network
+  
+  kafka3:
+    image: 'bitnami/kafka:3.5'
+    container_name: kafka-3
+    ports:
+      - '39093:39093'
+    environment:
+      - KAFKA_CFG_BROKER_ID=103
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper-1:12181,zookeeper-2:22181,zookeeper-3:32181
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://0.0.0.0:9092,EXTERNAL://0.0.0.0:39093
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://:9092,EXTERNAL://localhost:39093
+      - KAFKA_INTER_BROKER_LISTENER_NAME=PLAINTEXT
+      - KAFKA_CFG_NUM_PARTITIONS=3
+      - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=false
+      - KAFKA_CFG_DEFAULT_REPLICATION_FACTOR=3
+      - KAFKA_CFG_OFFSETS_TOPIC_REPLICATION_FACTOR=3
+      - KAFKA_CFG_TRANSACTION_STATE_LOG_REPLICATION_FACTOR=3
+      - KAFKA_HEAP_OPTS=-Xmx1024m -Xms1024m
+    volumes:
+      - 'kafka3_data:/bitnami'
+    depends_on:
+      - zookeeper1
+      - zookeeper2
+      - zookeeper3
+    networks:
+      - kafka_network
+
+  kafka-ui:
+    image: 'obsidiandynamics/kafdrop'
+    container_name: 'kafka-ui'
+    environment:
+      - KAFKA_BROKERCONNECT=kafka-1:9092,kafka-2:9092,kafka-3:9092
+      - SERVER_PORT=8080
+    networks:
+      - kafka_network
+    ports:
+      - "8080:8080"
+    depends_on:
+      - kafka1
+      - kafka2
+      - kafka3
+      - zookeeper1
+      - zookeeper2
+      - zookeeper3
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "6379:6379"
+    command: redis-server --requirepass masukredis
+    networks:
+      - kafka_network
+
+volumes:
+  zookeper_data1:
+  zookeper_data2:
+  zookeper_data3:
+  kafka1_data:
+  kafka2_data:
+  kafka3_data:
+
+networks:
+  kafka_network:
+    driver: bridge
