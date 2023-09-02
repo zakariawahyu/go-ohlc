@@ -6,7 +6,9 @@ import (
 )
 
 type Config struct {
-	Redis RedisConfig
+	Redis  RedisConfig
+	Kafka  KafkaConfig
+	Logger LoggerConfig
 }
 
 func NewConfig() *Config {
@@ -20,6 +22,8 @@ func NewConfig() *Config {
 	}
 
 	return &Config{
-		Redis: LoadRedisConfig(),
+		Redis:  LoadRedisConfig(),
+		Kafka:  LoadKafkaConfig(),
+		Logger: LoadLoggerConfig(),
 	}
 }
