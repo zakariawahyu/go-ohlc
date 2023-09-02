@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"github.com/labstack/echo/v4"
-	"github.com/spf13/viper"
 	"github.com/zakariawahyu/go-ohlc/config"
 	kafka_client "github.com/zakariawahyu/go-ohlc/pkg/kafka-client"
 	"github.com/zakariawahyu/go-ohlc/pkg/logger"
@@ -26,5 +25,5 @@ func NewApp(cfg *config.Config, log logger.Logger) {
 	controller := NewController(kafkaProducer, cfg.Kafka, log)
 	e.GET("/order", controller.Order)
 
-	log.Fatal(e.Start(fmt.Sprintf(":%v", viper.GetString("CLIENT_PORT"))))
+	log.Fatal(e.Start(fmt.Sprintf(":%v", cfg.App.ClientPort)))
 }

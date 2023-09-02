@@ -6,6 +6,7 @@ import (
 )
 
 type Config struct {
+	App    AppConfig
 	Redis  RedisConfig
 	Kafka  KafkaConfig
 	Logger LoggerConfig
@@ -22,6 +23,7 @@ func NewConfig() *Config {
 	}
 
 	return &Config{
+		App:    LoadAppConfig(),
 		Redis:  LoadRedisConfig(),
 		Kafka:  LoadKafkaConfig(),
 		Logger: LoadLoggerConfig(),

@@ -13,11 +13,11 @@ type Producer interface {
 
 type producer struct {
 	log     logger.Logger
-	brokers string
+	brokers []string
 	w       *kafka.Writer
 }
 
-func NewProducer(log logger.Logger, brokers string) *producer {
+func NewProducer(log logger.Logger, brokers []string) *producer {
 	return &producer{log: log, brokers: brokers, w: NewWriter(brokers, kafka.LoggerFunc(log.Errorf))}
 }
 

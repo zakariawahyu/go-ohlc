@@ -9,7 +9,7 @@ import (
 func main() {
 	cfg := config.NewConfig()
 
-	appLogger := logger.NewApiLogger(cfg)
+	appLogger := logger.NewLogger(cfg)
 	appLogger.InitLogger()
 
 	app.NewApp(cfg, appLogger)

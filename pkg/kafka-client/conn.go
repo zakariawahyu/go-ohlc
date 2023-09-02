@@ -9,7 +9,7 @@ import (
 )
 
 func ConnectKafkaBrokers(ctx context.Context, cfg *config.Config, log logger.Logger) error {
-	kafkaConn, err := kafka.DialContext(ctx, "tcp", cfg.Kafka.KafkaBroker)
+	kafkaConn, err := kafka.DialContext(ctx, "tcp", cfg.Kafka.KafkaBroker[0])
 	if err != nil {
 		return errors.Wrap(err, "kafka-client.ConnectKafkaBrokers.DialContext")
 	}

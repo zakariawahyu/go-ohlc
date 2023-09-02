@@ -5,9 +5,9 @@ import (
 	"github.com/segmentio/kafka-go/compress"
 )
 
-func NewWriter(brokers string, errLogger kafka.Logger) *kafka.Writer {
+func NewWriter(brokers []string, errLogger kafka.Logger) *kafka.Writer {
 	return &kafka.Writer{
-		Addr:         kafka.TCP(brokers),
+		Addr:         kafka.TCP(brokers...),
 		Balancer:     &kafka.LeastBytes{},
 		RequiredAcks: kafka.RequireAll,
 		MaxAttempts:  writerMaxAttempts,

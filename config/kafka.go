@@ -1,9 +1,12 @@
 package config
 
-import "github.com/spf13/viper"
+import (
+	"github.com/spf13/viper"
+	"strings"
+)
 
 type KafkaConfig struct {
-	KafkaBroker    string
+	KafkaBroker    []string
 	KafkaGroupID   string
 	KafkaTopic     string
 	KafkaPartition int
@@ -12,7 +15,7 @@ type KafkaConfig struct {
 
 func LoadKafkaConfig() KafkaConfig {
 	return KafkaConfig{
-		KafkaBroker:    viper.GetString("KAFKA_BROKER"),
+		KafkaBroker:    strings.Split(viper.GetString("KAFKA_BROKER"), ","),
 		KafkaGroupID:   viper.GetString("KAFKA_GROUP_ID"),
 		KafkaTopic:     viper.GetString("KAFKA_TOPIC"),
 		KafkaPartition: viper.GetInt("KAFKA_PARTITION"),
