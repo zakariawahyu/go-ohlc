@@ -17,7 +17,7 @@ func InitKafkaTopics(ctx context.Context, kafkaConn *kafka.Conn, log logger.Logg
 	}
 
 	controllerURI := net.JoinHostPort(controller.Host, strconv.Itoa(controller.Port))
-	log.Infof("(kafka controller uri) controllerURI: %s", controllerURI)
+	log.Infof("kafka controller uri : %s", controllerURI)
 
 	conn, err := kafka.DialContext(ctx, "tcp", controllerURI)
 	if err != nil {
@@ -26,8 +26,6 @@ func InitKafkaTopics(ctx context.Context, kafkaConn *kafka.Conn, log logger.Logg
 	}
 	defer conn.Close()
 
-	log.Infof("(established new kafka controller connection) controllerURI: %s", controllerURI)
-
 	kafkaTopic := getKafkaTopicConfig(cfg)
 
 	if err := conn.CreateTopics(kafkaTopic); err != nil {
@@ -35,7 +33,7 @@ func InitKafkaTopics(ctx context.Context, kafkaConn *kafka.Conn, log logger.Logg
 		return
 	}
 
-	log.Infof("(kafka topics created or already exists): %+v", []kafka.TopicConfig{kafkaTopic})
+	log.Infof("kafka topics created or already exists : %+v", []kafka.TopicConfig{kafkaTopic})
 }
 
 func getKafkaTopicConfig(cfg config.KafkaConfig) kafka.TopicConfig {

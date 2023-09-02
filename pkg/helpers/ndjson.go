@@ -10,8 +10,7 @@ import (
 	"strconv"
 )
 
-func LoadFiles() ([]NdjsonData, error) {
-	directory := "../../subsetdata"
+func LoadFiles(directory string) ([]NdjsonData, error) {
 	result := []NdjsonData{}
 
 	files, err := ioutil.ReadDir(directory)

@@ -7,7 +7,8 @@ import (
 )
 
 func TestLoadFiles(t *testing.T) {
-	data, err := LoadFiles()
+	directory := "../../subsetdata/"
+	data, err := LoadFiles(directory)
 
 	fmt.Println(data)
 	assert.NotNil(t, data, "data should not be nil")

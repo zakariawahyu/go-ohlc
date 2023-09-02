@@ -19,5 +19,12 @@ func NewApp(cfg *config.Config, log logger.Logger) {
 		log.Fatal(err)
 	}
 
+	// Kafka Producer
+	kafkaProducer := kafka_client.NewProducer(log, cfg.Kafka.KafkaBroker)
+	defer kafkaProducer.Close()
+
+	controller := NewController(kafkaProducer, cfg.Kafka, log)
+	e.GET("/order", controller.Order)
+
 	log.Fatal(e.Start(fmt.Sprintf(":%v", viper.GetString("CLIENT_PORT"))))
 }

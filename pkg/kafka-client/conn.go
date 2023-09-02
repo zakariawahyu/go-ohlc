@@ -18,6 +18,7 @@ func ConnectKafkaBrokers(ctx context.Context, cfg *config.Config, log logger.Log
 	if err != nil {
 		return errors.Wrap(err, "kafka-client.ConnectKafkaBrokers.kafkaConn.Brokers")
 	}
+	defer kafkaConn.Close()
 
 	// Create Kafka Topic
 	InitKafkaTopics(ctx, kafkaConn, log, cfg.Kafka)
