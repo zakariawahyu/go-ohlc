@@ -55,11 +55,13 @@ func (ctrl *Controller) Order(c echo.Context) error {
 
 		dataInBytes, _ := json.Marshal(orderData)
 
-		ctrl.producer.PublishMessage(ctx, kafka.Message{
+		if err = ctrl.producer.PublishMessage(ctx, kafka.Message{
 			Topic: ctrl.kafkaConfig.KafkaTopic,
 			Value: dataInBytes,
 			Time:  time.Now().UTC(),
-		})
+		}); err != nil {
+			ctrl.log.Errorf("Error publish data to kafka. err : %v", err)
+		}
 		ctrl.log.Infof("Push data to kafka %v", orderData)
 	}
 

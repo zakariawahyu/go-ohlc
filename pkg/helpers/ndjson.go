@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"encoding/json"
 	"github.com/pkg/errors"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -13,12 +12,15 @@ import (
 func LoadFiles(directory string) ([]NdjsonData, error) {
 	result := []NdjsonData{}
 
-	files, err := ioutil.ReadDir(directory)
+	files, err := os.Open(directory)
 	if err != nil {
 		return nil, errors.Wrap(err, "helpers.LoadFile.ReadDir")
 	}
+	defer files.Close()
 
-	for _, file := range files {
+	fileInfos, _ := files.Readdir(-1)
+
+	for _, file := range fileInfos {
 		if filepath.Ext(file.Name()) == ".ndjson" {
 			filePath := filepath.Join(directory, file.Name())
 			result, err = convertFileToStruct(filePath)
@@ -47,7 +49,6 @@ func convertFileToStruct(filePath string) ([]NdjsonData, error) {
 		data := NdjsonData{}
 		if err = json.Unmarshal([]byte(line), &data); err != nil {
 			return nil, errors.Wrap(err, "helpers.jsonUnmarshal")
-			continue
 		}
 
 		eq, _ := strconv.Atoi(data.ExecutedQuantity)
