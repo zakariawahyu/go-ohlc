@@ -20,7 +20,7 @@ type SummaryServiceClient struct {
 	log    logger.Logger
 }
 
-func NewServiceClient(cfg *config.Config, log logger.Logger) SummaryServiceClient {
+func NewSummaryServiceClient(cfg *config.Config, log logger.Logger) SummaryServiceClient {
 	conn, err := grpc.Dial(fmt.Sprintf(":%v", cfg.App.SummaryServicePort), grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatalf("Could not connect port %s : %v", cfg.App.SummaryServicePort, err)

@@ -1,6 +1,9 @@
 run-client:
 	go run cmd/main.go
 
+run-order-service:
+	go run services/order/cmd/main.go
+
 run-worker-service:
 	go run services/worker/cmd/main.go
 

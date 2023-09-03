@@ -19,7 +19,7 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	SummaryService_Summary_FullMethodName = "/ohlc.SummaryService/Summary"
+	SummaryService_Summary_FullMethodName = "/summary.SummaryService/Summary"
 )
 
 // SummaryServiceClient is the client API for SummaryService service.
@@ -96,7 +96,7 @@ func _SummaryService_Summary_Handler(srv interface{}, ctx context.Context, dec f
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var SummaryService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "ohlc.SummaryService",
+	ServiceName: "summary.SummaryService",
 	HandlerType: (*SummaryServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

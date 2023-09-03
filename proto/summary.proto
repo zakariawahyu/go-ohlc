@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package ohlc;
+package summary;
 
 option go_package = "github.com/zakariawahyu/go-ohlc/pb";
 

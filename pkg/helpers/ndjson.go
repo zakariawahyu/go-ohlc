@@ -4,13 +4,14 @@ import (
 	"bufio"
 	"encoding/json"
 	"github.com/pkg/errors"
+	"github.com/zakariawahyu/go-ohlc/entity"
 	"os"
 	"path/filepath"
 	"strconv"
 )
 
-func LoadFiles(directory string) ([]NdjsonData, error) {
-	result := []NdjsonData{}
+func LoadFiles(directory string) ([]entity.NdjsonData, error) {
+	result := []entity.NdjsonData{}
 
 	files, err := os.Open(directory)
 	if err != nil {
@@ -33,8 +34,8 @@ func LoadFiles(directory string) ([]NdjsonData, error) {
 	return result, nil
 }
 
-func convertFileToStruct(filePath string) ([]NdjsonData, error) {
-	result := []NdjsonData{}
+func convertFileToStruct(filePath string) ([]entity.NdjsonData, error) {
+	result := []entity.NdjsonData{}
 
 	file, err := os.Open(filePath)
 	if err != nil {
@@ -46,7 +47,7 @@ func convertFileToStruct(filePath string) ([]NdjsonData, error) {
 	for scanner.Scan() {
 		line := scanner.Text()
 
-		data := NdjsonData{}
+		data := entity.NdjsonData{}
 		if err = json.Unmarshal([]byte(line), &data); err != nil {
 			return nil, errors.Wrap(err, "helpers.jsonUnmarshal")
 		}
@@ -61,7 +62,7 @@ func convertFileToStruct(filePath string) ([]NdjsonData, error) {
 			data.Price = data.ExecutionPrice
 		}
 
-		result = append(result, NdjsonData{
+		result = append(result, entity.NdjsonData{
 			StockCode:   data.StockCode,
 			OrderNumber: data.OrderNumber,
 			Type:        data.Type,

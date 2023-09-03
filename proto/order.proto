@@ -1,10 +1,10 @@
 syntax = "proto3";
 
-package ohlc;
+package order;
 
 option go_package = "github.com/zakariawahyu/go-ohlc/pb";
 
-service OhlcService {
+service OrderService {
   rpc Order(OrderRequest) returns (OrderResponse) {}
 }
 
