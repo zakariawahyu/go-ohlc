@@ -19,3 +19,11 @@ func NewSuccessResponse(code int, data interface{}) *SuccessResponse {
 		Data:    data,
 	}
 }
+
+func NewErrorResponse(code int, data interface{}) *ErrorResponse {
+	return &ErrorResponse{
+		Success: false,
+		Code:    code,
+		Errors:  data,
+	}
+}

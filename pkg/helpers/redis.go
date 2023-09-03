@@ -4,13 +4,14 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/redis/go-redis/v9"
+	"github.com/zakariawahyu/go-ohlc/entity"
 	"time"
 )
 
-func GetRedis(redis *redis.Client, ctx context.Context, key string) (OHLC, error) {
+func GetRedis(redis *redis.Client, ctx context.Context, key string) (entity.OHLC, error) {
 	ohlcBytes, _ := redis.Get(ctx, key).Bytes()
 
-	ohlc := OHLC{}
+	ohlc := entity.OHLC{}
 	if err := json.Unmarshal(ohlcBytes, &ohlc); err != nil {
 		return ohlc, err
 	}
@@ -18,7 +19,7 @@ func GetRedis(redis *redis.Client, ctx context.Context, key string) (OHLC, error
 	return ohlc, nil
 }
 
-func SetRedis(redis *redis.Client, ctx context.Context, key string, ttl int, ohlc *OHLC) error {
+func SetRedis(redis *redis.Client, ctx context.Context, key string, ttl int, ohlc *entity.OHLC) error {
 	ohlcBytes, err := json.Marshal(ohlc)
 	if err != nil {
 		return err

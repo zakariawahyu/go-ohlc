@@ -1,5 +1,11 @@
-run:
+run-client:
 	go run cmd/main.go
+
+run-worker-service:
+	go run services/worker/cmd/main.go
+
+run-summary-service:
+	go run services/summary/cmd/main.go
 
 docker-compose:
 	@echo Starting local docker compose...

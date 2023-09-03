@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"github.com/redis/go-redis/v9"
 	"github.com/segmentio/kafka-go"
+	"github.com/zakariawahyu/go-ohlc/entity"
 	"github.com/zakariawahyu/go-ohlc/pkg/helpers"
 	"github.com/zakariawahyu/go-ohlc/pkg/logger"
 )
@@ -31,7 +32,7 @@ func (c *WorkerController) Worker() {
 			c.log.Errorf("error while receiving message : %s", err.Error())
 		}
 
-		data := helpers.Order{}
+		data := entity.Order{}
 		if err = json.Unmarshal(m.Value, &data); err != nil {
 			c.log.Errorf("error while receiving message : %s", err.Error())
 		}

@@ -19,8 +19,7 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	OhlcService_Order_FullMethodName   = "/ohlc.OhlcService/Order"
-	OhlcService_Summary_FullMethodName = "/ohlc.OhlcService/Summary"
+	OhlcService_Order_FullMethodName = "/ohlc.OhlcService/Order"
 )
 
 // OhlcServiceClient is the client API for OhlcService service.
@@ -28,7 +27,6 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type OhlcServiceClient interface {
 	Order(ctx context.Context, in *OrderRequest, opts ...grpc.CallOption) (*OrderResponse, error)
-	Summary(ctx context.Context, in *SummaryRequest, opts ...grpc.CallOption) (*SummaryResponse, error)
 }
 
 type ohlcServiceClient struct {
@@ -48,21 +46,11 @@ func (c *ohlcServiceClient) Order(ctx context.Context, in *OrderRequest, opts ..
 	return out, nil
 }
 
-func (c *ohlcServiceClient) Summary(ctx context.Context, in *SummaryRequest, opts ...grpc.CallOption) (*SummaryResponse, error) {
-	out := new(SummaryResponse)
-	err := c.cc.Invoke(ctx, OhlcService_Summary_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // OhlcServiceServer is the server API for OhlcService service.
 // All implementations must embed UnimplementedOhlcServiceServer
 // for forward compatibility
 type OhlcServiceServer interface {
 	Order(context.Context, *OrderRequest) (*OrderResponse, error)
-	Summary(context.Context, *SummaryRequest) (*SummaryResponse, error)
 	mustEmbedUnimplementedOhlcServiceServer()
 }
 
@@ -72,9 +60,6 @@ type UnimplementedOhlcServiceServer struct {
 
 func (UnimplementedOhlcServiceServer) Order(context.Context, *OrderRequest) (*OrderResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Order not implemented")
-}
-func (UnimplementedOhlcServiceServer) Summary(context.Context, *SummaryRequest) (*SummaryResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Summary not implemented")
 }
 func (UnimplementedOhlcServiceServer) mustEmbedUnimplementedOhlcServiceServer() {}
 
@@ -107,24 +92,6 @@ func _OhlcService_Order_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
-func _OhlcService_Summary_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SummaryRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(OhlcServiceServer).Summary(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: OhlcService_Summary_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OhlcServiceServer).Summary(ctx, req.(*SummaryRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // OhlcService_ServiceDesc is the grpc.ServiceDesc for OhlcService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -135,10 +102,6 @@ var OhlcService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Order",
 			Handler:    _OhlcService_Order_Handler,
-		},
-		{
-			MethodName: "Summary",
-			Handler:    _OhlcService_Summary_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
