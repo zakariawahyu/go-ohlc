@@ -5,16 +5,9 @@ import (
 	"encoding/json"
 	"github.com/redis/go-redis/v9"
 	"github.com/segmentio/kafka-go"
+	"github.com/zakariawahyu/go-ohlc/pkg/helpers"
 	"github.com/zakariawahyu/go-ohlc/pkg/logger"
 )
-
-type OrderData struct {
-	StockCode   string `json:"stock_code"`
-	OrderNumber string `json:"order_number"`
-	Type        string `json:"type"`
-	Quantity    string `json:"quantity"`
-	Price       string `json:"price"`
-}
 
 type WorkerController struct {
 	kafkaReader *kafka.Reader
@@ -31,17 +24,25 @@ func NewWorkerController(kafkaReader *kafka.Reader, redisClient *redis.Client, l
 }
 
 func (c *WorkerController) Worker() {
+	ctx := context.Background()
 	for {
-		m, err := c.kafkaReader.ReadMessage(context.Background())
+		m, err := c.kafkaReader.FetchMessage(ctx)
 		if err != nil {
 			c.log.Errorf("error while receiving message : %s", err.Error())
 		}
 
-		data := OrderData{}
+		data := helpers.Order{}
 		if err = json.Unmarshal(m.Value, &data); err != nil {
 			c.log.Errorf("error while receiving message : %s", err.Error())
 		}
 
-		c.log.Info(data)
+		ohlc, _ := helpers.GetRedis(c.redisClient, ctx, data.StockCode)
+
+		calculateOHLC := helpers.CalculateOHLC(ohlc, data)
+		c.log.Infof("Calculate from kafka %v", calculateOHLC)
+
+		if err = helpers.SetRedis(c.redisClient, ctx, data.StockCode, 1800, &calculateOHLC); err != nil {
+			c.log.Errorf("Error set redis %v", err.Error())
+		}
 	}
 }
