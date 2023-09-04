@@ -3,8 +3,10 @@ package gateway
 import (
 	"context"
 	"fmt"
+	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 	"github.com/zakariawahyu/go-ohlc/config"
+	"github.com/zakariawahyu/go-ohlc/entity"
 	"github.com/zakariawahyu/go-ohlc/pb"
 	"github.com/zakariawahyu/go-ohlc/pkg/helpers"
 	"github.com/zakariawahyu/go-ohlc/pkg/helpers/response"
@@ -13,6 +15,8 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 	"net/http"
 )
+
+var validate = validator.New()
 
 type OrderServiceClient struct {
 	client pb.OrderServiceClient
@@ -32,6 +36,31 @@ func NewOrderServiceClient(cfg *config.Config, log logger.Logger) OrderServiceCl
 }
 
 func (o *OrderServiceClient) Order(c echo.Context) error {
+	order := entity.Order{}
+
+	if err := c.Bind(&order); err != nil {
+		return c.JSON(http.StatusBadRequest, response.NewErrorResponse(http.StatusBadRequest, err))
+	}
+
+	if err := validate.Struct(&order); err != nil {
+		return c.JSON(http.StatusBadRequest, response.NewErrorResponse(http.StatusBadRequest, err.Error()))
+	}
+
+	res, err := o.client.Order(context.Background(), &pb.OrderRequest{
+		StockCode:   order.StockCode,
+		OrderNumber: order.OrderNumber,
+		Type:        order.Type,
+		Quantity:    order.Quantity,
+		Price:       order.Price,
+	})
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, response.NewErrorResponse(http.StatusBadRequest, err))
+	}
+
+	return c.JSON(http.StatusCreated, response.NewSuccessResponse(http.StatusCreated, res))
+}
+
+func (o *OrderServiceClient) BulkOrder(c echo.Context) error {
 	directory := "./subsetdata/"
 	ndjsonData, err := helpers.LoadFiles(directory)
 	if err != nil {

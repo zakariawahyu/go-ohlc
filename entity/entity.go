@@ -13,11 +13,11 @@ type NdjsonData struct {
 }
 
 type Order struct {
-	StockCode   string `json:"stock_code"`
-	OrderNumber string `json:"order_number"`
-	Type        string `json:"type"`
-	Quantity    string `json:"quantity"`
-	Price       string `json:"price"`
+	StockCode   string `json:"stock_code," validate:"required"`
+	OrderNumber string `json:"order_number" validate:"required"`
+	Type        string `json:"type" validate:"required"`
+	Quantity    string `json:"quantity" validate:"required"`
+	Price       string `json:"price" validate:"required"`
 }
 
 type OHLC struct {
