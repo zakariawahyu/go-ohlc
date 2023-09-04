@@ -1,6 +1,9 @@
 package config
 
-import "github.com/spf13/viper"
+import (
+	"fmt"
+	"github.com/spf13/viper"
+)
 
 type AppConfig struct {
 	ClientPort         string
@@ -10,8 +13,8 @@ type AppConfig struct {
 
 func LoadAppConfig() AppConfig {
 	return AppConfig{
-		ClientPort:         viper.GetString("APP_CLIENT_PORT"),
-		OrderServicePort:   viper.GetString("APP_SERVICE_ORDER_PORT"),
-		SummaryServicePort: viper.GetString("APP_SERVICE_SUMMARY_PORT"),
+		ClientPort:         fmt.Sprintf(":%v", viper.GetString("APP_CLIENT_PORT")),
+		OrderServicePort:   fmt.Sprintf(":%v", viper.GetString("APP_SERVICE_ORDER_PORT")),
+		SummaryServicePort: fmt.Sprintf(":%v", viper.GetString("APP_SERVICE_SUMMARY_PORT")),
 	}
 }

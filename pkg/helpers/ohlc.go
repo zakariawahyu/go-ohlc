@@ -9,7 +9,6 @@ func CalculateOHLC(ohlc entity.OHLC, data entity.Order) entity.OHLC {
 	price, _ := strconv.ParseInt(data.Price, 10, 64)
 	quantity, _ := strconv.ParseInt(data.Quantity, 10, 64)
 
-	// Check if no record before
 	if ohlc.StockCode == "" && data.Type != "A" {
 		ohlc = entity.OHLC{
 			StockCode:     data.StockCode,

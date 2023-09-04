@@ -20,7 +20,6 @@ func ConnectKafkaBrokers(ctx context.Context, cfg *config.Config, log logger.Log
 	}
 	defer kafkaConn.Close()
 
-	// Create Kafka Topic
 	InitKafkaTopics(ctx, kafkaConn, log, cfg.Kafka)
 
 	log.Infof("(kafka-client connected) brokers: %+v", brokers)

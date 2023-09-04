@@ -8,6 +8,7 @@ import (
 	"github.com/zakariawahyu/go-ohlc/entity"
 	"github.com/zakariawahyu/go-ohlc/pkg/helpers"
 	"github.com/zakariawahyu/go-ohlc/pkg/logger"
+	redis2 "github.com/zakariawahyu/go-ohlc/pkg/redis"
 )
 
 type WorkerController struct {
@@ -37,12 +38,12 @@ func (c *WorkerController) Worker() {
 			c.log.Errorf("error while receiving message : %s", err.Error())
 		}
 
-		ohlc, _ := helpers.GetRedis(c.redisClient, ctx, data.StockCode)
+		ohlc, _ := redis2.GetRedis(c.redisClient, ctx, data.StockCode)
 
 		calculateOHLC := helpers.CalculateOHLC(ohlc, data)
 		c.log.Infof("Calculate from kafka %v", calculateOHLC)
 
-		if err = helpers.SetRedis(c.redisClient, ctx, data.StockCode, 1800, &calculateOHLC); err != nil {
+		if err = redis2.SetRedis(c.redisClient, ctx, data.StockCode, 1800, &calculateOHLC); err != nil {
 			c.log.Errorf("Error set redis %v", err.Error())
 		}
 	}

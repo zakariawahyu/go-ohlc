@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/zakariawahyu/go-ohlc/config"
 	"github.com/zakariawahyu/go-ohlc/pb"
 	"github.com/zakariawahyu/go-ohlc/pkg/logger"
@@ -21,7 +20,7 @@ func main() {
 		appLogger.Fatalf("Can't connect to redis %v", err)
 	}
 
-	listen, err := net.Listen("tcp", fmt.Sprintf(":%v", cfg.App.SummaryServicePort))
+	listen, err := net.Listen("tcp", cfg.App.SummaryServicePort)
 	if err != nil {
 		appLogger.Fatalf("Service could not listen %v", err)
 	}

@@ -2,6 +2,7 @@ package kafka_client
 
 import (
 	"context"
+	"github.com/pkg/errors"
 	"github.com/segmentio/kafka-go"
 	"github.com/zakariawahyu/go-ohlc/pkg/logger"
 )
@@ -23,7 +24,7 @@ func NewProducer(log logger.Logger, brokers []string) *producer {
 
 func (p *producer) PublishMessage(ctx context.Context, msgs ...kafka.Message) error {
 	if err := p.w.WriteMessages(ctx, msgs...); err != nil {
-		return err
+		return errors.Wrap(err, "kafka-client.PublishMessage.WriteMessages")
 	}
 	return nil
 }

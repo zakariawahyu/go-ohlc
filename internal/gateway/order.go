@@ -2,7 +2,6 @@ package gateway
 
 import (
 	"context"
-	"fmt"
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 	"github.com/zakariawahyu/go-ohlc/config"
@@ -24,7 +23,7 @@ type OrderServiceClient struct {
 }
 
 func NewOrderServiceClient(cfg *config.Config, log logger.Logger) OrderServiceClient {
-	conn, err := grpc.Dial(fmt.Sprintf(":%v", cfg.App.OrderServicePort), grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := grpc.Dial(cfg.App.OrderServicePort, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatalf("Could not connect port %s : %v", cfg.App.OrderServicePort, err)
 	}

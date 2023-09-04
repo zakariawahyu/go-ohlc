@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"github.com/zakariawahyu/go-ohlc/config"
 	"github.com/zakariawahyu/go-ohlc/pb"
 	kafka_client "github.com/zakariawahyu/go-ohlc/pkg/kafka-client"
@@ -18,16 +17,14 @@ func main() {
 	appLogger.InitLogger()
 	ctx := context.Background()
 
-	// Connect Kafka Brokers
 	if err := kafka_client.ConnectKafkaBrokers(ctx, cfg, appLogger); err != nil {
 		appLogger.Fatalf("Can't connect kafka broker %v", err)
 	}
 
-	// Kafka Producer
 	kafkaProducer := kafka_client.NewProducer(appLogger, cfg.Kafka.KafkaBroker)
 	defer kafkaProducer.Close()
 
-	listen, err := net.Listen("tcp", fmt.Sprintf(":%v", cfg.App.OrderServicePort))
+	listen, err := net.Listen("tcp", cfg.App.OrderServicePort)
 	if err != nil {
 		appLogger.Fatalf("Service could not listen %v", err)
 	}

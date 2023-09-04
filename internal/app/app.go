@@ -1,7 +1,6 @@
 package app
 
 import (
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/zakariawahyu/go-ohlc/config"
@@ -23,5 +22,5 @@ func NewApp(cfg *config.Config, log logger.Logger) {
 	summaryService := gateway.NewSummaryServiceClient(cfg, log)
 	e.GET("/summary/:stock-code", summaryService.GetSummary)
 
-	log.Fatal(e.Start(fmt.Sprintf(":%v", cfg.App.ClientPort)))
+	log.Fatal(e.Start(cfg.App.ClientPort))
 }

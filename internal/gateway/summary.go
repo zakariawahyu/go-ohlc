@@ -2,7 +2,6 @@ package gateway
 
 import (
 	"context"
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/zakariawahyu/go-ohlc/config"
 	"github.com/zakariawahyu/go-ohlc/entity"
@@ -21,7 +20,7 @@ type SummaryServiceClient struct {
 }
 
 func NewSummaryServiceClient(cfg *config.Config, log logger.Logger) SummaryServiceClient {
-	conn, err := grpc.Dial(fmt.Sprintf(":%v", cfg.App.SummaryServicePort), grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := grpc.Dial(cfg.App.SummaryServicePort, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatalf("Could not connect port %s : %v", cfg.App.SummaryServicePort, err)
 	}
